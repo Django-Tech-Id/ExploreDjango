@@ -1,0 +1,195 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tables {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+	<div class="content">
+		<div class="page-inner">
+			<div class="page-header">
+				<h4 class="page-title">Category</h4>
+				<ul class="breadcrumbs">
+					<li class="nav-home">
+						<a href="#">
+							<i class="flaticon-home"></i>
+						</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="{% url 'dashboard-category' %}">Category</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="{% url 'dashboard-category' %}">Category List</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							<div class="card-head-row">
+								<div class="card-title">Post List</div>
+								<div class="card-tools">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a href="{% url 'dashboard-category-create' %}" type="button" class="nav-link active" aria-selected="false">Add New Category</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="card-sub">									
+								This is list of Blog Category :
+							</div>
+							<table class="table mt-3 table-bordered table-hover table-striped">
+								<thead>
+									<tr>
+                                        <th class="col-md-1">No.</th>
+                                        <th class="col-md-4">Name</th>
+                                        <th class="col-md-2">Description</th>
+                                        <th class="col-md-2">Status</th>
+                                        <th class="col-md-2">Image</th>
+                                        <th class="col-md-1">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for category in categories %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ category.name }}</td>
+                                            <td>{{ category.description }}</td>
+                                            <td>
+												{% if category.status %}
+												Active
+												{% else %}
+												Inactive
+												{% endif %}
+											</td>
+                                            <td>
+												{% if category.image %}
+													<img src="{{ category.image.url }}" class="img-thumbnail" width="100px"/>
+												{% else %}
+													{% load static %}
+													<img src="{% get_media_prefix %}category/category.png" class="img-thumbnail" width="100px"/>
+												{% endif %}
+											</td>
+                                            <td>
+                                                <div class="btn-group" role="group" aria-label="Action">
+                                                    <a href="{% url 'dashboard-category-edit' category.id %}" type="button" class="btn btn-warning">Edit</a>
+                                                    <a href="#" onclick="hapus('{{ category.id }}')" type="submit" class="btn btn-danger">Delete</a>
+                                                </div>                                
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+	<!-- Atlantis DEMO methods, don't include it in your project! -->
+	<script src="/static/assets/js/setting-demo2.js"></script>
+	<script>
+		$('#displayNotif').on('click', function(){
+			var placementFrom = $('#notify_placement_from option:selected').val();
+			var placementAlign = $('#notify_placement_align option:selected').val();
+			var state = $('#notify_state option:selected').val();
+			var style = $('#notify_style option:selected').val();
+			var content = {};
+
+			content.message = 'Turning standard Bootstrap alerts into "notify" like notifications';
+			content.title = 'Bootstrap notify';
+			if (style == "withicon") {
+				content.icon = 'fa fa-bell';
+			} else {
+				content.icon = 'none';
+			}
+			content.url = 'index.html';
+			content.target = '_blank';
+
+			$.notify(content,{
+				type: state,
+				placement: {
+					from: placementFrom,
+					align: placementAlign
+				},
+				time: 1000,
+			});
+		});
+	</script>
+	<script>
+		//== Class Initialization
+		jQuery(document).ready(function() {
+			$('#delete_category').click(function(e) {
+					var postId = $(this).data('id');
+					swal({
+						title: 'Do you want to delete?',
+						text: "You won't be able to revert this!",
+						type: 'warning',
+						buttons:{
+							cancel: {
+								visible: true,
+								text : 'Cancel',
+								className: 'btn btn-success'
+							},        			
+							confirm: {
+								text : 'OK',
+								className : 'btn btn-danger'
+							}
+						}
+					}).then((willDelete) => {
+						if (willDelete) {
+							var url = "{% url 'dashboard-category-delete' 'hapus-ini' %}";
+							var newurl = url.replace('hapus-ini',postId);
+							window.location.href = newurl;
+						}
+					});
+			})
+		});
+	</script>
+	<script>
+		//== Class Initialization
+		function hapus(id){
+			swal({
+				title: 'Do you want to delete?',
+				text: "You won't be able to revert this!",
+				type: 'warning',
+				buttons:{
+					cancel: {
+						visible: true,
+						text : 'Cancel',
+						className: 'btn btn-success'
+					},        			
+					confirm: {
+						text : 'OK',
+						className : 'btn btn-danger'
+					}
+				}
+			}).then((willDelete) => {
+				if (willDelete) {
+					var url = "{% url 'dashboard-category-delete' 'hapus-ini' %}";
+					var newurl = url.replace('hapus-ini',id);
+					window.location.href = newurl;
+				}
+			});
+		}
+	</script>
+	
+{% endblock javascripts %}

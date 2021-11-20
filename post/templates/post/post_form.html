@@ -1,0 +1,156 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Forms {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+	<div class="content">
+		<div class="page-inner">
+			<div class="page-header">
+				<h4 class="page-title">Post Form</h4>
+				<ul class="breadcrumbs">
+					<li class="nav-home">
+						<a href="#">
+							<i class="flaticon-home"></i>
+						</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="{% url 'dashboard-post' %}">Post</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="{% url 'dashboard-post-create' %}">Post Form</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							<div class="card-title">Post Form</div>
+						</div>
+						<form method="POST" action="" enctype="multipart/form-data">
+							<div class="card-body">
+								<div class="row">
+									{% csrf_token %}
+									<div class="col-md-6 col-lg-6">
+											{{ form.category.label_tag }}
+											{{ form.category }}                                
+											{{ form.title.label_tag }}
+											{{ form.title }}                                
+											{{ form.summary.label_tag }}
+											{{ form.summary }}                                
+											{{ form.image.label_tag }}
+											{{ form.image }}                                
+											{{ form.description.label_tag }}
+											{{ form.description }}                                
+											{{ form.status.label_tag }}
+											{{ form.status }}
+											{{ form.publish_on.label_tag }}
+											{{ form.publish_on }}                                
+											{{ form.content.label_tag }}
+											{{ form.content }}        
+										</div>
+									<div class="col-md-6 col-lg-6">
+										<br />
+										<div class="col-md-12">
+											<div class="card full-height">
+												<div class="card-header">
+													<div class="card-head-row">
+														<div class="card-title">Gambar</div>
+													</div>
+												</div>
+												<div class="card-body">
+													<img src="{{ form.image.value.url }}" class="img-thumbnail" width="100%">  
+												</div>
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="card full-height">
+												<div class="card-header">
+													<div class="card-head-row">
+														<div class="card-title">Comments</div>
+														<div class="card-tools">
+															<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+																<li class="nav-item">
+																	<a href="#" type="button" class="nav-link active" aria-selected="false" data-toggle="modal" data-target="#newCommand">Add New Comment</a>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												{% for comment in comments %}
+												<div class="card-body">
+													<div class="d-flex">
+														<div class="avatar avatar-online">
+															<img src="/static/assets/img/jm_denis.jpg" alt="..." class="avatar-img rounded-circle">
+														</div>
+														<div class="flex-1 ml-3 pt-1">
+															<h6 class="text-uppercase fw-bold mb-1">Joko Subianto <span class="text-warning pl-3">Edit</span><span class="text-danger pl-3">Hapus</span></h6>
+															<span class="text-muted">{{ comment.comment }}</span>
+														</div>
+														<div class="float-right pt-1">
+															<small class="text-muted">{{ comment.created_at }}</small>
+														</div>
+													</div>
+												</div>
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-action">
+								<input type="submit" class="btn btn-success" value="Save"/>
+								<a href="{% url 'dashboard-post' %}" class="btn btn-danger">Cancel</a>
+							</div>
+						</form>
+						<!-- The Modal -->
+						<div class="modal" id="newCommand">
+							<div class="modal-dialog">
+							<div class="modal-content">							
+								<!-- Modal Header -->
+								<div class="modal-header">
+									<h4 class="modal-title">Add New Comment</h4>
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+								</div>
+								<form method="POST" action="{% url 'dashboard-comment-create' %}">
+								<!-- Modal body -->
+								<div class="modal-body">
+										{% csrf_token %}
+										{{ commentform.post }}
+										{{ commentform.comment.label_tag }}
+										{{ commentform.comment }}                                
+								</div>
+								<!-- Modal footer -->
+								<div class="modal-footer">
+									<input type="submit" class="btn btn-success" value="Save"/>
+									<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+								</div>
+								</form>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+	<!-- Atlantis DEMO methods, don't include it in your project! -->
+	<script src="/static/assets/js/setting-demo2.js"></script>
+
+{% endblock javascripts %}	
